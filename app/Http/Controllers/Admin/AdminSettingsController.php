@@ -44,7 +44,7 @@ class AdminSettingsController extends Controller
     {
         foreach ($request->input() as $key => $value) {
             if ($key!="logo"){
-                if($key == 'theme'){
+                if($key == 'theme' or $key=="zarinpal_client"){
                     Setting::where('setting',$key)->update(['orgv'=>$value]);
                 }else{
                     Setting::where('setting',$key)->update(['value'=>$value]);

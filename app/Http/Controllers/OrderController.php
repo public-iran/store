@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Discountcode;
 use App\Payment;
 use App\Order;
 use App\Setting;
@@ -65,6 +66,7 @@ class OrderController extends Controller
             }
         }*/
 
+
         $options = Setting::all();
         $setting = array();
         foreach ($options as $option) {
@@ -79,11 +81,30 @@ class OrderController extends Controller
         }else{
             $price=$price+$setting['send_price'];
         }
+        $discountcode_darsad=0;
+        $discountcode="";
+        $Total=Cart::subtotal(00, null, '');
+        if (!empty($request->discountcode)){
+            $code=Discountcode::where('code',$request->discountcode)->first();
+            if ($code){
+                $discountcode_darsad=$code->darsad;
+                $discountcode=$code->code;
+                $discount=$price*(100-$code->darsad)/100;
+                $price=$discount;
+                $Total=$price;
+            }
+        }
+
+
         $payment = new payment($price,'payment-verify');
         $result = $payment->doPayment();
 
         if ($result->Status == 100) {
-
+            $code=Discountcode::where('code',$request->discountcode)->first();
+            if ($code){
+            $code->used=$code->used+1;
+            $code->save();
+            }
             foreach ($carts as $cart) {
                 $newPayment = new Order();
                 $newPayment->authority = ltrim($result->Authority, '0');;
@@ -99,16 +120,22 @@ class OrderController extends Controller
                 $newPayment->mobile = $request->mobile;
                 $newPayment->state = $request->state;
                 $newPayment->city = $request->city;
-                $newPayment->total = Cart::subtotal(00, null, '');
+                $newPayment->total = $Total;
                 $newPayment->address = $request->address;
                 $newPayment->description = $request->description;
                 $newPayment->factor_number = $factor;
+                $newPayment->discountcode = $discountcode;
+                $newPayment->discountcode_darsad = $discountcode_darsad;
                 $newPayment->save();
             }
 
-//            return redirect()->to('https://zarinpal.com/pg/StartPay/' . $result->Authority);
-            return redirect()->to('https://sandbox.zarinpal.com/pg/StartPay/' . $result->Authority);
 
+
+            if (zarinpal_client()=="پرداخت آزمایشی"){
+                return redirect()->to('https://sandbox.zarinpal.com/pg/StartPay/' . $result->Authority);
+            }elseif (zarinpal_client()=="درگاه پرداخت"){
+                return redirect()->to('https://zarinpal.com/pg/StartPay/' . $result->Authority);
+            }
         } else {
             echo 'ERR: ' . $result->Status;
         }

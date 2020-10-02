@@ -64,11 +64,7 @@
                                             <div>{{$order->state.' '.$order->city.' '.$order->address}}</div>
                                         </td>
                                         <td>
-                                            @if($order->send_status=="NO")
-                                                <span class="label">درحال برسی</span>
-                                            @else
-                                                <span class="label">ارسال شده</span>
-                                            @endif
+                                            <span class="label">{{$order->send_status}}</span>
                                         </td>
                                     </tr>
                                 @endforeach

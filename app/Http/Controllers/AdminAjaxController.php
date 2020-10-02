@@ -14,6 +14,7 @@ use App\Commission_sale;
 use App\Directselling;
 use App\Discountcode;
 use App\Model\Postcategories;
+use App\Order;
 use App\Package;
 use App\Payment;
 use App\Product;
@@ -936,6 +937,12 @@ class AdminAjaxController extends Controller
         Slider::where('id',$request->id)->update(['status'=>$request->status]);
         echo 'ok';
     }
+
+    public function set_send_status(Request $request)
+    {
+        Order::where('factor_number',$request->factor_number)->update(['send_status'=>$request->status]);
+        echo 'ok';
+    }
     public function delete_image_banner(Request $request)
     {
         $product = Banner::findorfail($request->id);
@@ -1160,6 +1167,12 @@ class AdminAjaxController extends Controller
             'msg' => 'ok'
         ]);
     }
-
+    public function delete_special(Request $request)
+    {
+        $special = Product::where('id', $request->id)->first();
+        $special->special = "NO";
+        $special->save();
+        echo "delete";
+    }
 
 }

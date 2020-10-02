@@ -416,8 +416,12 @@
                                                     <tr>
                                                         <td class="text-right" colspan="4"><strong>کل :</strong></td>
                                                         @php
-                                                            $Total=filter_var($total_price, FILTER_SANITIZE_NUMBER_INT);
-                                                              $Total=$Total+$setting['send_price'];
+                                                            if (array_sum($tp)<$setting['send_price_top']){
+                                                                $Total=filter_var($total_price, FILTER_SANITIZE_NUMBER_INT);
+                                                                  $Total=$Total+$setting['send_price'];
+                                                                  }else{
+                                                                $Total=filter_var($total_price, FILTER_SANITIZE_NUMBER_INT);
+                                                                  }
                                                         @endphp
 
                                                         <td class="text-right">{{number_format($Total)}} تومان</td>

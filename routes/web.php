@@ -60,6 +60,7 @@ Route::post('/panel-add_favorite','Front\FrontAjaxsController@add_favorite')->na
 Route::post('/panel-add_remove_favorite','Front\FrontAjaxsController@add_remove_favorite')->name('panel.add_remove_favorite');
 Route::post('/panel-delete_favorite','Front\FrontAjaxsController@delete_favorite')->name('panel.delete_favorite');
 Route::post('/all-search','Front\FrontAjaxsController@search')->name('search.search');
+Route::post('/checkdiscountcode','Front\FrontAjaxsController@checkdiscountcode')->name('code.checkdiscountcode');
 
 Route::get('admin/payment', 'Admin\AdminPaymentController@send')->name('payment.send');
 Route::get('admin/paymentBack', 'Admin\AdminPaymentController@back')->name('payment.paymentBack');
@@ -93,6 +94,7 @@ Route::group(['middleware' => 'admin'], function (){
         Route::resource('admin/clubs', 'Admin\AdminClubsController');
         Route::resource('admin/alerts', 'Admin\AdminAlertsController');
         Route::resource('admin/discountcodes', 'Admin\AdminDiscountcodesController');
+        Route::resource('admin/special', 'Admin\AdminSpecialsController');
 
 
         Route::get('admin/calculation', 'Admin\AdminCalculationController@calculation');
@@ -135,6 +137,7 @@ Route::group(['middleware' => 'admin'], function (){
         Route::post('/admin/admins/Change_user_isadmin', 'AdminAjaxController@Change_user_isadmin')->name('Change_user_isadmin');
         Route::post('/admin/alerts/alert_status', 'AdminAjaxController@alert_status')->name('alert_status');
         Route::post('/admin/alerts/alert_remove', 'AdminAjaxController@alert_remove')->name('alert_remove');
+        Route::post('/admin/alerts/special_remove', 'AdminAjaxController@special_remove')->name('special_remove');
         Route::post('/admin/delete_post', 'AdminAjaxController@delete_post')->name('post.delete_post');
         Route::post('/admin/delete_posts', 'AdminAjaxController@delete_posts')->name('post.delete_posts');
         Route::post('/admin/delete_attribute', 'AdminAjaxController@delete_attribute')->name('product.delete_attribute');
@@ -161,6 +164,8 @@ Route::group(['middleware' => 'admin'], function (){
         Route::post('/admin/user/delete_user', 'AdminAjaxController@delete_user')->name('user.delete_user');
         Route::post('/admin/user/delete_users', 'AdminAjaxController@delete_users')->name('user.delete_users');
 
+        Route::post('/admin/special/delete_special', 'AdminAjaxController@delete_special')->name('special.delete_special');
+
         Route::post('/admin/slider/delete_image_slider', 'AdminAjaxController@delete_image_slider')->name('slider.delete_image_slider');
         Route::post('/admin/slider/set_link_slider', 'AdminAjaxController@set_link_slider')->name('slider.set_link_slider');
         Route::post('/admin/slider/set_Text_slider', 'AdminAjaxController@set_Text_slider')->name('slider.set_Text_slider');
@@ -168,6 +173,8 @@ Route::group(['middleware' => 'admin'], function (){
         Route::post('/admin/slider/set_position_slider', 'AdminAjaxController@set_position_slider')->name('slider.set_position_slider');
         Route::post('/admin/slider/set_alt_slider', 'AdminAjaxController@set_alt_slider')->name('slider.set_alt_slider');
         Route::post('/admin/slider/set_status_slider', 'AdminAjaxController@set_status_slider')->name('slider.set_status_slider');
+
+        Route::post('/admin/orders/set_send_status', 'AdminAjaxController@set_send_status')->name('orders.set_send_status');
 
         Route::post('/admin/slider/delete_image_banner', 'AdminAjaxController@delete_image_banner')->name('banner.delete_image_banner');
         Route::post('/admin/slider/set_link_banner', 'AdminAjaxController@set_link_banner')->name('banner.set_link_banner');

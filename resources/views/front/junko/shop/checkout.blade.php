@@ -440,11 +440,27 @@
                                                                 <tr>
                                                                     <td class="text-right" colspan="4"><strong>کل :</strong></td>
                                                                     @php
+                                                                    if (array_sum($tp)<$setting['send_price_top']){
                                                                         $Total=filter_var($total_price, FILTER_SANITIZE_NUMBER_INT);
                                                                           $Total=$Total+$setting['send_price'];
+                                                                          }else{
+                                                                        $Total=filter_var($total_price, FILTER_SANITIZE_NUMBER_INT);
+                                                                          }
                                                                     @endphp
 
-                                                                    <td class="text-right">{{number_format($Total)}} تومان</td>
+                                                                    <td class="text-right" id="totalprice" data-price="{{$Total}}">{{number_format($Total)}} تومان</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-right" colspan="4">
+                                                                        <div class="form-group" style="margin-bottom: 0">
+                                                                            <label for="input-payment-lastname" class="control-label" style="float: right;padding: 5px">کد تخفیف:</label>
+                                                                            <input onkeyup="showbtndiscount()" style="width: auto;float: right" dir="ltr" type="text" class="form-control" id="input-payment-lastname"
+                                                                                   name="discountcode">
+                                                                            <span style="float: right;line-height: 19px;margin-right: 5px;display: none" id="sabt_discount" class="btn btn-primary site-btn sabt_discount">ثبت</span>
+                                                                            <label for="input-payment-lastname" id="responce" class="control-label" style="float: right;padding: 5px"></label>
+                                                                        </div>
+                                                                    </td>
+                                                                     <td class="text-right" id="discountcodeprice"></td>
                                                                 </tr>
                                                                 </tfoot>
                                                             </table>
@@ -516,6 +532,39 @@
 
         });
     </script>
+    <script>
+        function number_3_3(num, sep) {
+            var number = typeof num === "number" ? num.toString() : num,
+                separator = typeof sep === "undefined" ? ',' : sep;
+            return number.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1" + separator);
+        }
+
+        function showbtndiscount() {
+            $('#responce').html('');
+            $('#discountcodeprice').html('');
+            var code=$('input[name=discountcode]').val();
+            if (code.length>3){
+                $('#sabt_discount').show();
+
+                $('.sabt_discount').click(function () {
+                    $('#responce').html('');
+                    var price=$('#totalprice').attr('data-price');
+                    var CSRF_TOKEN = '{{ csrf_token() }}';
+                    var url = '{{route('code.checkdiscountcode')}}';
+                    var data = {_token: CSRF_TOKEN,price:price,code:code};
+                    $.post(url, data, function (msg) {
+                            $('#responce').html(msg.msg);
+                            $('#discountcodeprice').html(msg.price);
+                            $('#responce').css('color',msg.color)
+                    });
+                })
+
+            }else{
+                $('#sabt_discount').hide();
+            }
+        }
+
+    </script>
 
     <script>
 
@@ -523,7 +572,7 @@
         $("#ostan").change(function () {
             var i = $(this).find('option:selected').val();
             ldMenu(i, 'city');
-            $('.selectpicker').selectpicker('refresh');
+            /*$('.selectpicker').selectpicker('refresh');*/
         });
 
         function set_state_name() {
@@ -551,7 +600,7 @@
             var city_value = $(this).val();
             if (city_value == city) {
                 $(this).attr('selected', 'selected');
-                $('.selectpicker').selectpicker('refresh');
+                /*$('.selectpicker').selectpicker('refresh');*/
             }
         });
 

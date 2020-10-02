@@ -238,7 +238,8 @@
 @section('script')
     <script>
         $("#pdpSelectedBefore").persianDatepicker({
-            selectedBefore: !0
+            showGregorianDate: true,
+            formatDate: "YYYY-0M-DD"
         });
     </script>
 @endsection

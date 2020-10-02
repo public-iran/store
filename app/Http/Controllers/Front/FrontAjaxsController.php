@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Front;
 
 use App\Alert;
 use App\Comment;
+use App\Discountcode;
 use App\Favorite;
 use App\Post;
 use App\Post_comments;
 use App\Postcategory;
 use App\Product;
+use App\Spacial;
 use Cookie;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -25,15 +27,15 @@ class FrontAjaxsController extends Controller
 
     public function set_view_post(Request $request)
     {
-        $view=Post::findorfail($request->id);
-        $view->view=$view->view+1;
+        $view = Post::findorfail($request->id);
+        $view->view = $view->view + 1;
         $view->save();
     }
 
     public function set_view_product(Request $request)
     {
-        $view=Product::findorfail($request->id);
-        $view->view=$view->view+1;
+        $view = Product::findorfail($request->id);
+        $view->view = $view->view + 1;
         $view->save();
     }
 
@@ -50,7 +52,7 @@ class FrontAjaxsController extends Controller
     public function minusProductCount(Request $request)
     {
         $id = $_POST['item'];
-        $newCount=0;
+        $newCount = 0;
         $oldCount = session("product.$id.1");
         if ($oldCount != 0)
             $newCount = $oldCount - 1;
@@ -65,7 +67,7 @@ class FrontAjaxsController extends Controller
         $comment->productId = $_POST['productId'];
         $comment->user_id = $_POST['userId'];
         $comment->content = $_POST['content'];
-        $comment->parentId =  $_POST['parentId'];
+        $comment->parentId = $_POST['parentId'];
         $comment->save();
     }
 
@@ -86,46 +88,48 @@ class FrontAjaxsController extends Controller
         $comment->content = $_POST['content'];
         $comment->save();
     }
+
     function service_comment_like_dislike(Request $request)
     {
-        $Cookie = Cookie::get('service_comment'.$request->id);
-        if (!$Cookie){
-            Cookie::queue('service_comment'.$request->id, $request->id, 27*24*60);
-            $service=Post_comments::where('id',$request->id)->first();
-            $value=$request->value;
-            $service->$value=$service->$value+1;
+        $Cookie = Cookie::get('service_comment' . $request->id);
+        if (!$Cookie) {
+            Cookie::queue('service_comment' . $request->id, $request->id, 27 * 24 * 60);
+            $service = Post_comments::where('id', $request->id)->first();
+            $value = $request->value;
+            $service->$value = $service->$value + 1;
             $service->save();
             echo 'ok';
-        }else{
+        } else {
             echo 'onelike';
         }
     }
+
     function product_comment_like_dislike(Request $request)
     {
-        $Cookie = Cookie::get('product_comment'.$request->id);
-        if (!$Cookie){
+        $Cookie = Cookie::get('product_comment' . $request->id);
+        if (!$Cookie) {
 //            session()->put('service_comment'.$request->id,$request->id);
-            Cookie::queue('product_comment'.$request->id, $request->id, 27*24*60);
-            $service=Comment::where('id',$request->id)->first();
-            $value=$request->value;
-            $service->$value=$service->$value+1;
+            Cookie::queue('product_comment' . $request->id, $request->id, 27 * 24 * 60);
+            $service = Comment::where('id', $request->id)->first();
+            $value = $request->value;
+            $service->$value = $service->$value + 1;
             $service->save();
             echo 'ok';
-        }else{
+        } else {
             echo 'onelike';
         }
     }
 
     public function add_remove_favorite(Request $request)
     {
-        $Favorite = Favorite::where(['user_id'=>Auth::id(),'product_id'=>$request->id])->first();
-        if (empty($Favorite)){
-            $item=new Favorite();
-            $item->user_id=Auth::id();
-            $item->product_id=$request->id;
+        $Favorite = Favorite::where(['user_id' => Auth::id(), 'product_id' => $request->id])->first();
+        if (empty($Favorite)) {
+            $item = new Favorite();
+            $item->user_id = Auth::id();
+            $item->product_id = $request->id;
             $item->save();
             echo 'add';
-        }else{
+        } else {
             $Favorite->delete();
             echo 'deleted';
         }
@@ -146,7 +150,8 @@ class FrontAjaxsController extends Controller
     public function search(Request $request)
     {
         $products = Product::where('status', 'PUBLISHED')->where('title', 'like', "%" . $request->search . "%")->with('categories')->orderby('id', 'desc')->take(5)->get();
-        foreach ($products as $product){?>
+        foreach ($products as $product) {
+            ?>
             <div class="col-12" style="background: #fff">
                 <div class="card" style="border: none">
                     <a href="/product/<?= $product->slug ?>">
@@ -154,7 +159,8 @@ class FrontAjaxsController extends Controller
 
 
                             <div class="row" style="margin-right: 0">
-                                <div class="col-1" style="padding-right: 0;padding-left: 0;margin-right: 13px;margin-top: 12px">
+                                <div class="col-1"
+                                     style="padding-right: 0;padding-left: 0;margin-right: 13px;margin-top: 12px">
                                     <img width="50" src="<?= asset($product->image) ?>" alt="">
                                 </div>
                                 <div class="col-9" style="padding-top: 13px;padding-right: 31px;">
@@ -171,18 +177,57 @@ class FrontAjaxsController extends Controller
                 </div>
             </div>
         <?php }
-       /* return response([
-            'msg'=>$products
-        ]);*/
+        /* return response([
+             'msg'=>$products
+         ]);*/
 
     }
 
     public function alert_status(Request $request)
     {
-        $alert=Alert::where('id',$request->alert_id)->first();
-        $alert->status=$request->status;
+        $alert = Alert::where('id', $request->alert_id)->first();
+        $alert->status = $request->status;
         $alert->save();
         echo $request->status;
     }
 
+
+
+    public function checkdiscountcode(Request $request)
+    {
+        $discountcode = Discountcode::where('code', $request->code)->first();
+        $msg = "";
+        $color = "";
+        $price = "";
+        if (!empty($discountcode)) {
+            $applicants = Discountcode::where('end_date', '<', \Illuminate\Support\Carbon::now()->format('Y-m-d'))->where('code', $discountcode->code)->first();
+            if (!empty($applicants)) {
+                $msg = "این کد تخفیف منقضی شده است";
+                $color = "red";
+                $price = "";
+            } else {
+                if ($discountcode->used >= $discountcode->max) {
+                    $msg = "از این کد نمی توانید استفاده کنید";
+                    $color = "red";
+                    $price = "";
+                } else {
+                    $price = $request->price * (100 - $discountcode->darsad) / 100;
+                    $msg = "ثبت شد";
+                    $color = "green";
+                    $price = number_format($price) . ' تومان ';
+                }
+            }
+
+        } else {
+            $msg = "این کد تخفیف نامعتبر است";
+            $color = "red";
+            $price = "";
+
+        }
+        return response([
+            'msg' => $msg,
+            'color' => $color,
+            'price' => $price,
+        ]);
+    }
 }

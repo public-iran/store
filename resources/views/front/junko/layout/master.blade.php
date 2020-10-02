@@ -35,6 +35,12 @@ if(!isset($total_price)){
     <!-- CSS
     ========================= -->
 
+    <link rel="manifest" href="{{asset('manifest.json')}}">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="msapplication-starturl" content="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="theme-color" content="#e5e5e5">
     <!-- Plugins CSS -->
     <link rel="stylesheet" href="{{asset('junko/css/plugins.css')}}">
 
@@ -570,6 +576,7 @@ if(!isset($total_price)){
 </footer>
 <!--footer area end-->
 
+{{--
 <!-- modal area start-->
 <div class="modal fade" id="modal_box" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -680,6 +687,7 @@ if(!isset($total_price)){
     </div>
 </div>
 <!-- modal area end-->
+--}}
 
 <!--news letter popup start (uncomment lines 763-788 in main.js to show this)-->
 <div class="newletter-popup">

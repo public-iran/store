@@ -43,6 +43,7 @@
                         <td>تاریخ ثبت سفارش</td>
                         <td>وضعیت سفارش</td>
                         <td>مبلغ فاکتور</td>
+                        <td>وضعیت</td>
                         <td>اقدامات</td>
                     </tr>
                     @foreach($orders as $itemm)
@@ -66,6 +67,7 @@
                                 </td>
                             @endif
                             <td>{{number_format($item->total)}} تومان</td>
+                            <td>{{$item->send_status}}</td>
 
                             <td>
                                 <a href="{{route('orders-product.show', $item->factor_number)}}"

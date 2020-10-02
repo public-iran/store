@@ -94,13 +94,12 @@
 
                                     <tbody>
                                     @foreach($discountcodes as $discountcode)
-                                      {{--  @php
-                                        $created_at=Verta::instance($discountcode->created_at)->format('d');
+                                        @php
+                                            $applicants = App\Discountcode::where('end_date', '<', \Illuminate\Support\Carbon::now()->format('Y-m-d'))->where('id',$discountcode->id)->first();
+                                        @endphp
 
-                                        $v = Verta::parse('1395-10-07 14:12:32');
-                                        dd($v->diffNow());
-                                        @endphp--}}
-                                        <tr id="post{{$discountcode->id}}">
+                                        <tr id="post{{$discountcode->id}}" @if($applicants) style="background-color: #ffe2e2;position: relative" @endif>
+
                                             <td style="padding: 0;">
                                                 <input name="delete" type="checkbox" id="md_checkbox_{{$discountcode->id}}" value="{{$discountcode->id}}" class="filled-in chk-col-light-blue checkBox">
                                                 <label style="margin: 10px 10px 0 0;" for="md_checkbox_{{$discountcode->id}}"></label>
@@ -109,8 +108,8 @@
                                             <td>{{$discountcode->darsad}} % </td>
                                             <td>{{$discountcode->max}}بار</td>
                                             <td>{{$discountcode->used}}بار</td>
-                                            <td>{{Verta::instance($discountcode->created_at)->format('%d %B %Y | H:i:s')}}</td>
-                                            <td>{{Verta::instance($discountcode->created_at)->format('%d %B %Y | H:i:s')}}</td>
+                                            <td>{{Verta::instance($discountcode->created_at)->format('%d %B %Y')}}</td>
+                                            <td>{{Verta::instance($discountcode->end_date)->format('%d %B %Y')}}</td>
                                             <td>
 
                                                 <button onclick="delete_product_category(this,'{{$discountcode->id}}')" type="button" class="btn btn-danger waves-effect" style="padding: 1px 5px;margin-bottom: 5px">
@@ -124,6 +123,7 @@
 
                                             </td>
                                         </tr>
+
                                     @endforeach
                                     </tbody>
                                 </table>

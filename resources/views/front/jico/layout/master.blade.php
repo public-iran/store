@@ -42,8 +42,8 @@ if(!isset($total_price)){
     <link rel="stylesheet" href="{{asset('jico/css/style.css')}}">
     <!-- Modernizr JS -->
     <script src="{{asset('jico/js/vendor/modernizr-2.8.3.min.js')}}"></script>
-    <link rel="manifest" href="{{asset('manifest.json')}}">
 
+    <link rel="manifest" href="{{asset('manifest.json')}}">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="msapplication-starturl" content="/">

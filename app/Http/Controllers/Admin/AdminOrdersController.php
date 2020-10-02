@@ -16,7 +16,7 @@ class AdminOrdersController extends Controller
     {
         abort_unless(Gate::allows('products_order'),403,'شما به این بخش دسترسی ندارید');
         if(Auth::user()->role == 1){
-            $orders = Order::where('type', '!=' , 'پیش خرید')->select('factor_number', 'user_id', 'pay_status')->distinct()->get();
+            $orders = Order::where('type', '!=' , 'پیش خرید')->select('factor_number', 'user_id', 'pay_status')->distinct()->orderby('id','desc')->get();
 
         }else{
             $orders = Order::where('user_id', Auth::id(), 'and')->where('type', '!=' , 'پیش خرید')->select('factor_number', 'user_id', 'pay_status')->distinct()->get();

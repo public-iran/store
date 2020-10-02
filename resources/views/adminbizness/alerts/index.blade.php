@@ -28,6 +28,16 @@
             {{session('alert-success')}}
         </div>
     @endif
+    <div class="col-xs-12 head" style="margin-bottom: 60px;display: flex;justify-content: space-between">
+        <div style="min-width: 150px">
+            <h2 style="margin-top: 0">
+                <i style="float: right;font-size: 29pt;color: #555;" class="material-icons">add_alert</i>
+                <b style="color: #555;margin: 7px 5px 0 0;float: right;font-size: 18pt;"> مدیریت اعلان</b>
+            </h2>
+        </div>
+
+    </div>
+
 
     <div class="row clearfix">
 

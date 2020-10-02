@@ -64,6 +64,19 @@
                                         </div>
                                     </div>
                                 @endif
+                                    @if($setting->type=="text2")
+
+                                        <div class="">
+                                            <div class="col-sm-6 setting" style="float: right">
+                                                <h2 class="card-inside-title">{{$setting->title}}</h2>
+                                                <div class="form-group">
+                                                    <div class="form-line">
+                                                        <input type="text" name="{{$setting->setting}}" class="form-control" value="{{$setting->value}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
                                     @if($setting->type=="enum")
                                     <h2 class="card-inside-title">{{$setting->title}}</h2>
                                     <div class="row clearfix">

@@ -40,12 +40,13 @@ class AdminDiscountcodesController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'code' => 'required',
+            'code' => 'required|unique:discountcodes',
             'darsad' => 'required',
             'max' => 'required',
             'end_date' => 'required',
         ], [
             'code.required'=>'فیلد کد نمی تواند خالی باشد',
+            'code.unique'=>'فیلد کد نمی تواند تکراری باشد',
             'darsad.required'=>'فیلد درصد تخفیف نمی تواند خالی باشد',
             'max.required'=>'فیلد تعداد قابل استفاده نمی تواند خالی باشد',
         ]);
@@ -94,7 +95,7 @@ class AdminDiscountcodesController extends Controller
     {
 
         $this->validate($request, [
-            'code' => 'required',
+            'code' => 'required|unique:discountcodes,code,' . $id,
             'darsad' => 'required',
             'max' => 'required',
             'end_date' => 'required',

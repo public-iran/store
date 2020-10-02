@@ -744,6 +744,14 @@ foreach ($options as $option) {
                             </a>
                         </li>
                             @endcan
+                            @can('special')
+                        <li class="dashboard">
+                            <a href="{{route('special.index')}}">
+                                <i class="material-icons">developer_board</i>
+                                <span>مدیریت محصولات ویژه</span>
+                            </a>
+                        </li>
+                            @endcan
                             @can('alerts')
                         <li class="dashboard">
                             <a href="{{route('alerts.index')}}">

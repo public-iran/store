@@ -20,7 +20,7 @@ class PanelController extends Controller
     }
     public function orders()
     {
-        $orders = Order::with('product')->where('user_id', Auth::id(), 'and')->paginate(15);
+        $orders = Order::with('product')->where('user_id', Auth::id(), 'and')->paginate(6);
 
         return view('front'.theme_name().'panel.orders',compact(['orders']));
     }
